@@ -1,2 +1,2 @@
 # MULTI---BOX---GAME
-Click the boxes and score points (JAVASCRIPT)
+Click the boxes and score points 
