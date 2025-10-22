@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Click All the Boxes</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+    #gameArea {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background: #f0f0f0;
+    }
+    .box {
+      width: 40px;
+      height: 40px;
+      background: rgb(239, 13, 58);
+      position: absolute;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    #scoreboard {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 20px;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+  <div id="gameArea">
+    <div id="scoreboard">Score: 0 | Time: 30</div>
+  </div>
+
+  <script>
+    const gameArea = document.getElementById("gameArea");
+    const scoreboard = document.getElementById("scoreboard");
+
+    let score = 0;
+    let timeLeft = 30;
+    let boxInterval;
+    let timer;
+
+    function spawnBoxes(count = 5) {
+      for (let i = 0; i < count; i++) {
+        const box = document.createElement("div");
+        box.classList.add("box");
+        box.style.left = `${Math.random() * (window.innerWidth - 40)}px`;
+        box.style.top = `${Math.random() * (window.innerHeight - 40)}px`;
+
+        box.addEventListener("click", () => {
+          score++;
+          box.remove();
+          updateScoreboard();
+        });
+
+        gameArea.appendChild(box);
+      }
+    }
+
+    function updateScoreboard() {
+      scoreboard.textContent = `Score: ${score} | Time: ${timeLeft}`;
+    }
+
+    function startGame() {
+      spawnBoxes(10); // initial batch
+      boxInterval = setInterval(() => spawnBoxes(5), 2000); // spawn every 2 sec
+
+      timer = setInterval(() => {
+        timeLeft--;
+        updateScoreboard();
+        if (timeLeft === 0) {
+          clearInterval(timer);
+          clearInterval(boxInterval);
+          document.querySelectorAll(".box").forEach(box => box.remove());
+          scoreboard.textContent = `Game Over! Final Score: ${score}`;
+        }
+      }, 1000);
+    }
+
+    startGame();
+  </script>
+</body>
+</html>
